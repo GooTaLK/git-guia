@@ -1,0 +1,189 @@
+GIT guía
+
+Palabras clave:
+  Working directory / Work tree: Area con el estado actual de los archivos.
+  Stage: Area con los archivos listos para hacer el commit.
+  Commit: Registro de un estado de los archivos.
+  Hash: Hash o código único asignado a un commit como identificador.
+  HEAD: Posición actual entre los commits.
+  HEAD~<número>: Commit relativo al HEAD, mirando hacia atras.
+  Branch: ¿Cómo lo explico? xD. Línea paralela a nuestro código que contiene su propio Working directory, stage y commits. Esta se separa e inicia desde uno de nuestros commits o también se puede iniciar desde que no existe ningún commit. Se pueden crear varias ramas.
+  Tag: Etiqueta que se le da a un commit
+  Stash: Area de almacenamiento alterno de un Working directory.
+
+Iniciar git:
+  $ git init
+
+Ver el estado:
+  $ git status
+
+Añadir archivos al stage:
+  $ git add <archivo/ruta>
+  $ git add [--patch/-p] <archivo/ruta>
+Retirar archivos del stage:
+  $ git reset HEAD <archivo>
+  $ git restore --staged <archivo/ruta>
+Retirar archivos del stage y revertir cambios del Working directory:
+  $ git restore --staged --worktree <archivo/ruta>
+
+Ver diferencias entre el Working directory y los archivos en el stage o el HEAD:
+  $ git diff
+  $ git diff <archivo/ruta>
+Ver diferencias entre un commit y el HEAD:
+  $ git diff <hash>
+  $ git diff <hash> [<hash(otro commit en lugar del HEAD)>]
+
+Revertir cambios desde el Working directory a los archivos del stage o al HEAD si el stage está limpio:
+  $ git checkout -- <archivo/ruta>
+  $ git restore <archivo/ruta>
+
+Hacer un commit:
+  $ git commit
+  $ git commit -m "<mensaje(título)>" [-m "<mensaje(detalles)>"]
+Modificar mensaje del último commit:
+  $ git commit --amend
+  $ git commit --amend -m "<mensaje(título)>" [-m "<mensaje(detalles)>"]
+Ver los commits:
+  $ git log
+  $ git log [--oneline] [--graph/-g] [--decorate/-d] [--all/-a] [--since=<tiempo-con-guiones>]
+Deshacer un commit:
+  Reset regresa a un commit, eliminando los commits posteriores, sin modificar el Working directory.
+  $ git reset <hash(anterior al commit que deseas eliminar)>
+  Reset --hard hace lo mismo que reset pero modifica el Working directory al commit elegido.
+  $ git reset --hard/-h <hash(anterior al commit que deseas eliminar)>
+  Reset --soft hace lo mismo que reset y además agrega los archivos del Working directory a el stage.
+  $ git reset --soft/-s <hash(anterior al commit que deseas eliminar)>
+Revertir un commit:
+  Revert crea un commit nuevo revirtiendo los cambios del commit elegido a su commit anterior. También modifica el Working directory.
+  $ git revert <hash>
+  Revert --no-commit modifica el Working directory al commit anterior o al commit elegido y no realiza el commit. Para hacer el commit se debe completar la acción con un revert --continue.
+  $ git revert --no-commit <hash>
+  [$ git revert --no-commit <another-hash>]
+  $ git revert --continue
+Modificar el historial de commits:
+  Esto es barbaro.
+  $ git rebase --interactive/-i <hash>
+
+Mostrar información sobre un commit:
+  $ git show <commit-id(hash/...)>
+
+Traer un archivo de un commit al stage:
+  $ git checkout <hash> <archivo/ruta>
+Traer un archivo de un commit al Working directory:
+  $ git restore --source=<hash> <archivo/ruta>
+
+Cambiar de commit o branch:
+  $ git checkout <commit-hash/branch>
+
+Ver branchs:
+  $ git branch
+Crear una nueva branch:
+  $ git branch <nombre>
+Moverme a una branch:
+  $ git switch <nombre>
+Moverme a una branch y descartar los cambios de la branch actual:
+  $ git switch --discard-changes <nombre>
+Crear una branch y moverme a ella:
+  $ git checkout -b <nombre>
+  $ git switch -c <nombre>
+Crear una branch huerfana:
+  Esta es una branch limpia sin commits ni archivos.
+  $ git switch --orphan <nombre>
+Cambiar el nombre de una branch:
+  Si en lugar de -m usamos -M el cambio de nombre sera de manera forzada.
+  $ git branch -m <nuevo-nombre-de-la-branch-actual>
+  $ git branch -m <nombre-de-otra-branch> <nuevo-nombre>
+Cambiar el nombre de la branch inicial:
+  $ git config --global init.branchName <nombre>
+Eliminar una branch:
+  $ git branch -d <nombre>
+Fusionar branch actual con otra branch:
+  ¿Cómo explico esto? x2 t-t. Existen metodos para hacer una fusíon tales como fast-forward, recursive. En la manera recursiva 'recursive' pueden aparecer conflictos al encontrar diferencias en una mísma línea que se resuelven revisando los archivos y reescribiendo lo que nos deja git.
+  $ git merge <nombre-de-otra-branch>
+Abortar una fusión:
+  $ git merge --abort
+Aplanar branchs con rebase:
+  Rebase exámina las branchs haciendo que la más corta se inserte entre los commits de la otra branch y el commit nodo de ambas branchs. Uniendolas/aplanandolas en una sola branch, además cambia el historial haciendo que los commits cambian de hashes.
+  $ git rebase <nombre-de-otra-branch>
+
+Crear un tag:
+  $ git tag <nombre>
+  $ git tag <nombre> <commit-hash>
+Ver los tags:
+  $ git tag
+Filtrar tags:
+  $ git tag -l "<reg-exp(¿Es una RegExp?)>"
+Borrar tag:
+  $ git tag --delete/-d <nombre>
+
+Crear un tag anotado:
+  $ git tag -a "<nombre>"
+
+Insertar mi Working directory en el stash:
+  $ git stash
+  $ git stash save <mensaje>
+Ver un stash:
+  $ git stash show <stash(stash@{<número>})>
+Ver lista del stash:
+  $ git stash list
+Aplicar cambios a mi Working directory desde el stash:
+  $ git stash aply [<stash>]
+Borrar el stash:
+  $ git stash drop [<stash>]
+Aplicar y borrar el stash:
+  $ git stash pop [<stash>]
+Aplicar el stash en una branch nueva:
+  $ git stash branch <nombre-de-la-branch> [<stash>]
+
+Enlazar repositorio remoto:
+  $ git remote add <nombre> <dirección>
+Ver repositorios remotos:
+  $ git remote
+  $ git remote -v
+Subir repositorio local al remoto:
+  $ git push <nombre-del-remoto> --all
+  $ git push <nombre-del-remoto> <brach-a-subir>
+
+Clonar repositorio remoto:
+  $ git clone <dirección>
+
+Obtener archivos remotos desde el remoto:
+  $ git fetch <nombre-del-remoto>
+
+Actualizar mi repositorio local a el remoto:
+  Cuando se hace un pull lo que realmente se hace es un fetch y luego un merge de la branch remota a la local.
+  $ git pull <nombre-del-remoto> <branch-a-actualizar>
+Actualizar mi repositorio local a el remoto en una situación de merge recursiva:
+  Aplica rebase en lugar de merge. Sinceramente me confundí con esto. :O.
+  $ git pull --rebase <nombre-del-remoto> <branch-a-actualizar>
+Ver branch remotas:
+  $ git branch --all
+
+Busqueda dentro del repositorio:
+  $ git grep <palabra/'<regExp>'> [...]
+
+Crear aliases:
+  $ git config --global alias.<alias> '<comando-y-flags>'
+Ver todo alias:
+  $ git config --global --get-regexp alias
+Eliminar alias:
+  $ git config --global --unset alias.<alias>
+
+Obtener ayuda:
+  $ git <comando> --help/-h
+
+--------------
+Commits con prefijos:
+Una de ellas, bastante famosa, es la convención que sigue el framework Angular.
+
+Estos serían los prefijos:
+
+  feat:     Una nueva característica para el usuario.
+  fix:      Arregla un bug que afecta al usuario.
+  perf:     Cambios que mejoran el rendimiento del sitio.
+  build:    Cambios en el sistema de build, tareas de despliegue o instalación.
+  ci:       Cambios en la integración continua.
+  docs:     Cambios en la documentación.
+  refactor: Refactorización del código como cambios de nombre de variables o funciones.
+  style:    Cambios de formato, tabulaciones, espacios o puntos y coma, etc; no afectan al usuario.
+  test:     Añade tests o refactoriza uno existente.
